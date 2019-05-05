@@ -159,7 +159,7 @@
 <script>
     // import axios from 'axios'
 
-    import moment from 'moment'
+    // import moment from 'moment'
 
     export default {
         name: "detail",
@@ -227,7 +227,7 @@
                     .post(`/site/validate/comment/post/goods/${this.$route.params.id}`,{
                         commenttxt
                     }).then(res=>{
-                        // console.log(res)
+                    alert(res.data.message)
                     this.pinglun();
                 })
             },
@@ -239,20 +239,14 @@
 
 
 
-
-
-
-
-
-
         },
 
         // 过滤器
-        filters: {
-            formatTime(value){
-                return moment(value).format('YYYY年MM月DD日')
-            }
-        }
+        // filters: {
+        //     formatTime(value){
+        //         return moment(value).format('YYYY年MM月DD日')
+        //     }
+        // }
     }
 </script>
 

@@ -84,6 +84,7 @@
                                             </span>
                                             <span>
                                                 影音配件&nbsp;
+
                                             </span>
                                         </p>
                                     </h3>
@@ -198,7 +199,7 @@
 
 <script>
     // import axios from "axios";
-    import moment from "moment"
+    // import moment from "moment"
 
     export default {
         name: "index",
@@ -229,11 +230,11 @@
         },
 
         // 过滤 处理时间
-        filters: {
-            formatTime(value) {
-                return moment(value).format("YYYY年MM月DD日");
-            }
-        }
+        // filters: {
+        //     formatTime(value) {
+        //         return moment(value).format("YYYY年MM月DD日");
+        //     }
+        // }
     }
 </script>
 
