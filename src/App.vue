@@ -12,23 +12,23 @@
                     </div>
                     <div id="menu" class="right-box">
                     <span style="display: none;">
-                        <a href="" class="">登录</a>
+                        <router-link to="login">登录</router-link>
                         <strong>|</strong>
                         <a href="" class="">注册</a>
                         <strong>|</strong>
                     </span>
                         <span>
-                        <a href="" class="">会员中心</a>
+                        <router-link to="/member">会员中心</router-link>
                         <strong>|</strong>
                         <a>退出</a>
                         <strong>|</strong>
                     </span>
-                        <a href="" class="">
+                        <router-link to="/cart">
                             <i class="iconfont icon-cart"></i>购物车(
                             <span id="shoppingCartCount">
                             <span>4</span>
                         </span>)
-                        </a>
+                        </router-link>
                     </div>
                 </div>
             </div>

@@ -16,11 +16,31 @@ Vue.use(VueRouter)
 
 //写组件
 import index from './components/index'
+import detail from './components/detail'
+import cart from './components/cart'
+import login from './components/login'
+import member from './components/member'
 //写规则
 const  routes = [
     {
         path: '/index',
         component: index
+    },
+    {
+        path: '/detail/:id',
+        component: detail
+    },
+    {
+        path: '/login',
+        component: login
+    },
+    {
+        path: '/cart/:id',
+        component: cart
+    },
+    {
+        path: '/member',
+        component: member
     }
 ]
 //实例话路由对象
