@@ -227,7 +227,8 @@
                     .post(`http://111.230.232.110:8899/site/validate/comment/post/goods/${this.$route.params.id}`,{
                         commenttxt
                     }).then(res=>{
-                        // console.log(res)
+                        console.log(res)
+                    alert(res.data.message)
                     this.pinglun();
                 })
             },
