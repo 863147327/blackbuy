@@ -28,6 +28,10 @@ import member from './components/member'
 //写规则
 const  routes = [
     {
+        path: '/',
+        redirect: '/index'
+    },
+    {
         path: '/index',
         component: index
     },
