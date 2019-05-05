@@ -157,7 +157,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
+    // import axios from 'axios'
 
     import moment from 'moment'
 
@@ -182,8 +182,8 @@
             }
         },
         created(){
-            axios
-                .get(`http://111.230.232.110:8899/site/goods/getgoodsinfo/${this.$route.params.id}`)
+            this.$axios
+                .get(`/site/goods/getgoodsinfo/${this.$route.params.id}`)
                 .then(res=>{
                     // console.log(res)
                     this.goodsinfo = res.data.message.goodsinfo
@@ -198,8 +198,8 @@
 
         methods: {
             pinglun(){
-                axios
-                    .get(`http://111.230.232.110:8899/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=5`)
+                this.$axios
+                    .get(`/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=5`)
                     .then(res=>{
                         this.commentlist = res.data.message
                         this.totalpage = res.data.message.length
@@ -223,11 +223,10 @@
                 // 获取内容
                 const txtContent = document.getElementById('txtContent')
                 const commenttxt = txtContent.value
-                axios
-                    .post(`http://111.230.232.110:8899/site/validate/comment/post/goods/${this.$route.params.id}`,{
+                this.$axios
+                    .post(`/site/validate/comment/post/goods/${this.$route.params.id}`,{
                         commenttxt
                     }).then(res=>{
-                        console.log(res)
                     alert(res.data.message)
                     this.pinglun();
                 })

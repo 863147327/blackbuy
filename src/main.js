@@ -14,6 +14,11 @@ import './assets/statics/site/css/style.css'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
+// 抽取axios
+import axios from 'axios'
+Vue.prototype.$axios = axios
+// 基地址
+axios.defaults.baseURL = 'http://111.230.232.110:8899';
 //写组件
 import index from './components/index'
 import detail from './components/detail'
