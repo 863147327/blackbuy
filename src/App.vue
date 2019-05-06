@@ -18,9 +18,9 @@
                         <strong>|</strong>
                     </span>
                         <span>
-                        <router-link to="/member">会员中心</router-link>
+                        <router-link to="/centerContent">会员中心</router-link>
                         <strong>|</strong>
-                        <a>退出</a>
+                        <a @click="logout">退出</a>
                         <strong>|</strong>
                     </span>
                         <router-link to="/cart">
@@ -123,7 +123,16 @@
 </template>
 
 <script>
-    export default {}
+    export default {
+        methods: {
+            logout(){
+                localStorage.setItem('code','')
+                location.href = '/idnex'
+            }
+        }
+
+
+    }
 </script>
 
 <style>

@@ -95,7 +95,10 @@
 
 <script>
     export default {
-        name: "cart"
+        name: "cart",
+        methods: {
+
+        }
     }
 </script>
 

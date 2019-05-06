@@ -19,6 +19,8 @@ import axios from 'axios'
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://111.230.232.110:8899';
 
+
+
 // 抽取过滤器
 import moment from 'moment'
 Vue.filter('formatTime',value=>{
@@ -28,9 +30,12 @@ Vue.filter('formatTime',value=>{
 //写组件
 import index from './components/index'
 import detail from './components/detail'
+import centerOrder from './components/centerOrder'
+import centerContent from './components/centerContent'
+import centerPerson from './components/centerPerson'
+import centerOrderDetail from './components/centerOrderDetail'
 import cart from './components/cart'
 import login from './components/login'
-import member from './components/member'
 //写规则
 const  routes = [
     {
@@ -46,23 +51,79 @@ const  routes = [
         component: detail
     },
     {
+        path: '/centerContent',
+        component: centerContent,
+
+        children: [
+            {
+                path: 'centerOrder',
+                component: centerOrder
+            },
+            {
+                path: '',
+                component: centerPerson,
+                meta: {
+                    title: '会员中心',
+                    type: 'login'
+                },
+            },
+            {
+                path: 'centerPerson',
+                component: centerPerson
+            },
+            {
+                path: 'centerOrderDetail',
+                component: centerOrderDetail
+            },
+        ]
+    },
+    {
         path: '/login',
         component: login
     },
     {
-        path: '/cart/:id',
-        component: cart
+        path: '/cart',
+        component: cart,
+        meta: {
+            title: '购物车',
+            type: 'login'
+        }
     },
-    {
-        path: '/member',
-        component: member
-    }
+
 ]
 //实例话路由对象
 const router = new VueRouter({
     routes
 })
+        router.beforeEach((to, from, next) => {
+            const code = localStorage.getItem('code')
+            console.log(code)
+            if(code !== ''){
+                if(JSON.parse(code)=='登录成功'){
+                    next()
+                }
+            }else{
+                if (to.meta.title) {
+                    document.title = to.meta.title
+                }
+                const type = to.meta.type
+                // 判断该路由是否需要登录权限
+                if (type === 'login') {
 
+                    Vue.prototype.$axios.get('/site/account/islogin')
+                        .then(res=>{
+                            if(res.data.code== 'login'){
+                                next()
+                            }else{
+                                next('/login')
+                            }
+                        })
+
+                } else {
+                    next()  // 确保一定要有next()被调用
+                }
+            }
+        })
 
 
 new Vue({

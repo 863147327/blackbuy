@@ -13,7 +13,13 @@
                 <div class="wrap-box">
                     <div class="left-925">
                         <div class="goods-box clearfix">
-                            <div class="pic-box"></div>
+                            <div class="pic-box">
+                                <el-carousel height="330px">
+                                    <el-carousel-item v-for="item in imglist" :key="item.id">
+                                        <img :src="item.thumb_path" alt="">
+                                    </el-carousel-item>
+                                </el-carousel>
+                            </div>
                             <div class="goods-spec">
                                 <h1>{{goodsinfo.title}}</h1>
                                 <p class="subtitle">{{goodsinfo.sub_title}}</p>
@@ -41,19 +47,8 @@
                                         <dd>
                                             <div class="stock-box">
                                                 <div class="el-input-number el-input-number--small">
-                                                    <span role="button" class="el-input-number__decrease is-disabled">
-                                                        <i class="el-icon-minus"></i>
-                                                    </span>
-                                                    <span role="button" class="el-input-number__increase">
-                                                        <i class="el-icon-plus"></i>
-                                                    </span>
-                                                    <div class="el-input el-input--small">
-                                                        <!---->
-                                                        <input autocomplete="off" size="small" type="text" rows="2" max="60" min="1" validateevent="true" class="el-input__inner" role="spinbutton" aria-valuemax="60" aria-valuemin="1" aria-valuenow="1" aria-disabled="false">
-                                                        <!---->
-                                                        <!---->
-                                                        <!---->
-                                                    </div>
+                                                    <el-input-number v-model="num" :min="1" :max="goodsinfo.stock_quantity" label="描述文字"></el-input-number>
+
                                                 </div>
                                             </div>
                                             <span class="stock-txt">
@@ -77,17 +72,16 @@
                             <div id="tabHead" class="tab-head" style="position: static; top: 517px; width: 925px;">
                                 <ul>
                                     <li>
-                                        <a href="javascript:;" class="selected">商品介绍</a>
+                                        <a href="javascript:;" @click="show=true" :class="{selected:show}">商品介绍</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">商品评论</a>
+                                        <a href="javascript:;" @click="show=!true" :class="{selected:!show}">商品评论</a>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="tab-content entry" style="display: block;" v-html="goodsinfo.content">
-
+                            <div class="tab-content entry" v-show="show" style="display: block;" v-html="goodsinfo.content">
                             </div>
-                            <div class="tab-content" style="display: block;">
+                            <div class="tab-content" v-show="!show" style="display: block;">
                                 <div class="comment-box">
                                     <div id="commentForm" name="commentForm" class="form-box">
                                         <div class="avatar-box">
@@ -95,7 +89,7 @@
                                         </div>
                                         <div class="conn-box">
                                             <div class="editor">
-                                                <textarea id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
+                                                <textarea v-model.trim="message" id="txtContent" name="txtContent" sucmsg=" " datatype="*10-1000" nullmsg="请填写评论内容！"></textarea>
                                                 <span class="Validform_checktip"></span>
                                             </div>
                                             <div class="subcon">
@@ -120,11 +114,24 @@
                                         </li>
                                     </ul>
                                     <div class="page-box" style="margin: 5px 0px 0px 62px;">
-                                        <div id="pagination" class="digg">
-                                            <button class="disabled" @click="previous">上一页</button>
-                                            <span class="current" :class="pageIndex==(index+1)?'red':''" v-for="(item, index) in totalpage" :key="index">{{index+1}}</span>
-                                            <button class="disabled" @click="next">下一页</button>
-                                        </div>
+                                            <!--<el-pagination-->
+                                                    <!--background-->
+                                                    <!--layout="prev, pager, next"-->
+                                                    <!--:total="Math.ceil(totalpage/pageSize)">-->
+                                            <!--</el-pagination>-->
+
+                                        <el-pagination
+                                                @size-change="handleSizeChange"
+                                                @current-change="handleCurrentChange"
+                                                :current-page="pageIndex"
+                                                :page-sizes="[5, 10, 15, 20]"
+                                                :page-size="pageSize"
+                                                layout="total, sizes, prev, pager, next, jumper"
+                                                :total="totalcount">
+                                        </el-pagination>
+                                            <!--<button class="disabled" @click="previous">上一页</button>-->
+                                            <!--<span class="current" :class="pageIndex==(index+1)?'red':''" v-for="(item, index) in totalpage" :key="index">{{index+1}}</span>-->
+                                            <!--<button class="disabled" @click="next">下一页</button>-->
                                     </div>
                                 </div>
                             </div>
@@ -137,12 +144,12 @@
                                 <ul class="side-img-list">
                                     <li v-for="(item, index) in hotgoodslist" :key="index">
                                         <div class="img-box">
-                                            <a href="#/site/goodsinfo/90" class="">
+                                            <router-link :to="'/detail/'+item.id">
                                                 <img :src="item.img_url">
-                                            </a>
+                                            </router-link>
                                         </div>
                                         <div class="txt-box">
-                                            <a href="#/site/goodsinfo/90" class="">{{item.title}}</a>
+                                            <router-link :to="'/detail/'+item.id">{{item.title}}</router-link>
                                             <span>{{item.add_time | formatTime}}</span>
                                         </div>
                                     </li>
@@ -177,8 +184,15 @@
                 // 页码
                 pageIndex: 1,
 
+                pageSize: 10,
                 // 页数
-                totalpage: 1
+                totalcount: 0,
+                show: true,
+                //购买数量
+                num: 1,
+
+                // 评论
+                message: ''
             }
         },
         created(){
@@ -196,39 +210,64 @@
 
         },
 
+        watch:{
+            '$route.params.id'(nw){
+                this.$axios
+                    .get(`/site/goods/getgoodsinfo/${nw}`)
+                    .then(res=>{
+                        // console.log(res)
+                        this.goodsinfo = res.data.message.goodsinfo
+                        this.hotgoodslist = res.data.message.hotgoodslist
+                        this.imglist = res.data.message.imglist
+
+                    })
+                // 获评论
+                this.pinglun()
+            }
+        },
+
+
+
         methods: {
             pinglun(){
                 this.$axios
-                    .get(`/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=5`)
+                    .get(`/site/comment/getbypage/goods/${this.$route.params.id}?pageIndex=${this.pageIndex}&pageSize=${this.pageSize}`)
                     .then(res=>{
+                        // console.log(res)
                         this.commentlist = res.data.message
-                        this.totalpage = res.data.message.length
+                        this.totalcount = res.data.totalcount
                     })
             },
 
-            previous(){
-                this.pageIndex--
+            handleSizeChange(val) {
+                // console.log(`每页 ${val} 条`);
+                this.pageSize = val
                 this.pinglun()
-                // console.log(this.pageIndex)
             },
-
-            next(){
-                this.pageIndex++
-                this.pinglun();
-                // console.log(this.pageIndex)
+            handleCurrentChange(val) {
+                this.pageIndex = val
+                this.pinglun()
             },
-
             // 提交评论
             submit(){
-                // 获取内容
-                const txtContent = document.getElementById('txtContent')
-                const commenttxt = txtContent.value
                 this.$axios
                     .post(`/site/validate/comment/post/goods/${this.$route.params.id}`,{
-                        commenttxt
+                        commenttxt: this.message
                     }).then(res=>{
-                    alert(res.data.message)
-                    this.pinglun();
+                    console.log(res)
+                    if(!this.message){
+                            this.$message({
+                                message: '请输入内容',
+                                type: 'warning'
+                            });
+                    }else{
+                        this.$message({
+                            message: '恭喜你，这是一条成功消息',
+                            type: 'success'
+                        });
+                        this.pinglun();
+                    }
+
                 })
             },
 
@@ -236,9 +275,6 @@
             addcart(){
 
             }
-
-
-
         },
 
         // 过滤器
@@ -254,5 +290,13 @@
 
     .red {
         background-color: red;
+    }
+
+    .pic-box {
+        width: 395px;
+    }
+    .pic-box img {
+        width: 100%;
+        height: 100%;
     }
 </style>
